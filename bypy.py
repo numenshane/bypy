@@ -2554,6 +2554,7 @@ To stream a file, you can use the 'mkfifo' trick with omxplayer etc.:
 
 		paths = j['list']
 		for path in paths:
+			path = '/a' + path[2:]
 			if path['isdir']:
 				dirjs.append(path)
 			else:
