@@ -1,6 +1,6 @@
 #!/bin/bash
 execDir=/Data/bypy # bypy程序目录
-logFile=$execdir/bypy.log # 日志文件
+logFile=$execDir/bypy.log # 日志文件
 dataDir=/Data/youtube # 要远程同步上传至数据文件夹
 pythonExec=/usr/local/bin/python2.7 # python binary (version > 2.7)
 
