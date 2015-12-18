@@ -6,7 +6,7 @@ if [[ $# -eq 0 ]]; then
 fi
 
 dataSrc=/Data/tmp/
-mkdir -p dataSrc
+mkdir -p $dataSrc
 dataDestDir=/Data/youtube
 
 dl="curl -# -L -o "
