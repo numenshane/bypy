@@ -35,24 +35,24 @@ else
 
     mv -f "$1.mp4" $dataDestDir/
     cd $dataDestDir
-    perl /usr/bin/rename_pl "s/ |:|,|\?|\*|\||&|#|;|\(|\)|\[|\]|\\\/ /g" "$1"
+    perl /usr/bin/rename_pl "s/ |:|,|\?|\*|\||&|#|;|\(|\)|\[|\]|\\\/ /g" "$1.mp4"
 fi
 
 exit 0
 
 filename="$(basename "$1")"
 extension="${filename##*.}"
-filename="${filename%.*}"
+filename="${filename%.*}"	
 
 DEST_EXT=mp4  # hardcode for convinent 
 if [ $# -gt 2 ]; then
-        DEST_EXT=$3
+	DEST_EXT=$3
 fi
 
 $HANDBRAKE_CLI -i "$1" -o "$filename.$DEST_EXT" -e x264 -q 22 -r 12 -B 64 -X 480 -O
 if [[ $? -eq 0 ]]; then
-        echo "delete original $i" 
-        rm -f $i
+	echo "delete original $i" 
+	rm -f $i
         echo moving "$filename.$DEST_EXT" to $dataDestDir
         mv "$filename.$DEST_EXT" $dataDestDir/ 
 fi

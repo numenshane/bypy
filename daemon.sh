@@ -11,13 +11,13 @@ if  [[ `ps -elf|grep bypy|grep syncup|wc -l` -eq 0 ]]; then
     lines_bef=`ls -l|wc -l`
     $pythonExec $execDir/bypy.py syncup $dataDir >> $logFile 2>&1
     if [[ $? -eq 0 ]]; then
-        lines_cur=`ls -l|wc -l`
-        if [ $lines_bef -eq $lines_cur ]; then 
+	lines_cur=`ls -l|wc -l`
+	if [ $lines_bef -eq $lines_cur ]; then 
             echo "syncup down, clean and recycle local dir" >> $logFile
             rm -fr $dataDir/*
-        else
-            echo "$(date) adding more files during sync time, so don't clean $dataDir right now, delay to next time"
-        fi
+	else
+	    echo "$(date) adding more files during sync time, so don't clean $dataDir right now, delay to next time"	
+	fi
     else
         echo "$(date) Err: return status: $?" >> $logFile
     fi
