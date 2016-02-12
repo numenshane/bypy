@@ -1,6 +1,6 @@
-#Author: TianChi
-#Date: 2015-12
-#bypy: python client for BaiDu Yun disk
+Author: TianChi Date: 2015-12
+#using bypy as backend content consumer agent
+	bypy: python client for BaiDu Yun disk
 #first: check out src code under certain dir for convient usage
 	mkdir -p /Data && cd /Data 
 	for read only
