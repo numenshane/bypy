@@ -8,8 +8,8 @@
         	for write 
 	     		git clone https://numenshane@github.com/numenshane/bypy
         	for ssh not http(s)
-	     		edit .git/config, 
-	     		need private ssh key to push remotely
+	     		edit .git/config, convert https:// to ssh://git@
+			need private ssh key to push remotely
     	Second: auto provision for env
         	sh -x auto_provision.sh #install python2.7 and request lib
 		open browser to input auth code #using open auth for bypy client to access your Yun disk file   
