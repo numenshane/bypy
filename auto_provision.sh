@@ -1,9 +1,11 @@
 #!/bin/bash
 # Waring: Make sure to run this script under bypy sub dir
-cd `dirname $0` 
+cd `dirname $0`
+local_flag=0 
 # check python 2.7 installed
 whereis python |grep python2.7
 if [ $? -ne 0 ]; then 
+    ${local_flag}=1
     echo "++++++ yum install ++++++ "
     yum groupinstall -y 'development tools'
     yum install -y zlib-devel bzip2-devel openssl-devel xz-libs wget
@@ -39,7 +41,11 @@ fi
 
 # now auth this python bypy client
 echo "++++++ now auth this python client of bypy...."
-/usr/local/bin/python2.7 bypy.py list
+if [ ${local_flag} -eq '1' ]; 
+    then /usr/local/bin/python2.7 bypy.py list
+else 
+    python2.7 bypy.py list
+fi
 
 # adding to crontab like this
 echo " */2 * * * * ( /Data/bypy/daemon.sh /Data/youtube >> /Data/bypy/bypy.log 2>&1 )"
