@@ -22,7 +22,7 @@ if [ $? -ne 0 ]; then
     make clean && cd ../.. && rm -fr ${src_dir}
     
     echo "rm old link, create new, modify yum conf"
-    mv /usr/bin/python /usr/bin/python2.6.6
+    mv /usr/bin/python /usr/bin/python_backup
     ln -s /usr/local/bin/python2.7 /usr/bin/python
     sed -i 's/\/usr\/bin\/python$/\/usr\/bin\/python2.6.6/1' /usr/bin/yum
     
