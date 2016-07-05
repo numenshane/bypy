@@ -1,0 +1,36 @@
+* * * * * ( docker rm `docker ps -f status=exited -q` > /dev/null 2>&1 )
+*/2 * * * * ( /Data/bypy/daemon.sh /Data/youtube 2>&1 >> /Data/bypy/bypy1.log )
+*/2 * * * * ( /Data/bypy/daemon.sh /Data/transmission/downloaded 2>&1 >> /Data/bypy/bypy2.log )
+*/2 * * * * ( /Data/transmission/transmission-purge-complete.sh /Data/transmission/downloaded >> /Data/transmission/transmission_complete.log 2>&1 )
+0 0 * * * ( /Data/transmission/transmission-purge-no-seed.sh >> /Data/transmission/transmission_no_seed.log 2>&1 )
+0 0 1 * * ( cat /dev/null > /Data/transmission/transmission_complete.log )
+0 0 1 * * ( cat /dev/null > /Data/transmission/transmission_no_seed.log )
+
+
+# raw tables TRACE taget for debugging iptables rules, prerouting/output chain only at raw tables
+# iptables -t raw -A PREROUTING -p icmp -j TRACE
+# iptables -t raw -A OUTPUT -p icmp -j TRACE
+
+# mangle tables for packet filter and routing based on policy by using ip rule to associate packet mark number with route table number
+# iptables -t mangle -A PREROUTING -i eth2 -p tcp --dport 80 -j MARK --set-mark 20
+# ip route add default gw 20.0.0.1
+# ip route add table 20 via 10.0.0.1 dev eth0
+# ip rule add fwmark 20 table 20
+
+# use TARGET NOTRACK combined with conntrack tool to monitoring tcp/udp conn state inlet/outlet
+# conntrack -E -p tcp --orig-port-dst 9091 # tcp conn state-changing event at port 9091
+# iptables -t raw -A OUTPUT -o lo -j NOTRACK # no conntrack for ipc
+
+# time extension module to restrict service access time
+# iptables -t filter -A INPUT -p tcp --dport 22 -m time --datestart "2016-12-12T00:00:00" --datestop "2016-12-12T23:59:59" --utc -j DROP
+
+# use connmark module to mark all the packets of a connection with conntrack state "ESTABLISHED"; then send to NFQUEUE
+# iptables -t filter -I INPUT -p tcp --dport 9091 -m connmark --mark 666 -j NFQUEUE
+# iptables -t filter -I INPUT -p tcp --dport 9091 -m conntrack --ctstate ESTABLISHED -j CONNMARK --set-mark 666
+
+# iptables -t filter -I FORWARD -j NFQUEUE  
+# default NFQUEUE just DROP, userland app need call nfq_set_verdict(..,NF_ACCEPT...) to let go  or using 
+# -j NFQUEUE --queue-bypass which not supported under linux 2.6.32
+
+# connlimit restrict the number of parallel connections to a server per client IP address
+# iptables -t filter -I INPUT 1 -m connlimit --connlimit-above 2 -j REJECT
