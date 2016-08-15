@@ -19,7 +19,13 @@ if [ ! -e "$pidFile" ]; then
     find . -maxdepth 1 -type d -exec bash -c 'if [ "$1" != "." ]; then /usr/local/bin/python2.7 /Data/bypy/bypy.py upload "$1" `date +%Y-%m-%d` && rm -fr "$1"; fi' -- {} \;  
     rm "$pidFile"
 else
-    echo "$(date) another bypy instances is running concurrently, just exited!"
+    ps -elf|grep bypy|grep `cat $pidFile`
+    if [ $? -eq 0 ]; then 
+    	echo "$(date) another bypy instances is running concurrently, just exited!"
+    else
+	echo "remove not exited instances in $pidFile" 
+        rm -f "$pidFile"
+    fi
 fi
 
 echo --- $0 `date` this round ended

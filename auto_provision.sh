@@ -37,7 +37,6 @@ if [ $? -ne 0 ]; then
     easy_install-2.7 pip
     # install requests
     easy_install-2.7 requests
-fi
 
 # now auth this python bypy client
 echo "++++++ now auth this python client of bypy...."
