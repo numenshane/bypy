@@ -37,6 +37,7 @@ if [ $? -ne 0 ]; then
     easy_install-2.7 pip
     # install requests
     easy_install-2.7 requests
+fi
 
 # now auth this python bypy client
 echo "++++++ now auth this python client of bypy...."
@@ -47,6 +48,6 @@ else
 fi
 
 # adding to crontab like this
-echo " */2 * * * * ( /Data/bypy/daemon.sh /Data/youtube >> /Data/bypy/bypy.log 2>&1 )"
+echo "*/2 * * * * ( /Data/bypy/daemon.sh /Data/youtube >> /Data/bypy/bypy.log 2>&1 )"
 
 exit 0
