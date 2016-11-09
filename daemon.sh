@@ -6,7 +6,7 @@ if [ $# -eq 0 ]; then
 fi
 mkdir -p $1
 dataDir=$1 # 要远程同步上传至数据文件夹
-pythonExec=/usr/local/bin/python2.7 # python binary (version > 2.7)
+pythonExec=/usr/bin/python2.7 # python binary (version > 2.7)
 
 echo +++ $0 `date` this round started
 mkdir -p /var/bypy
