@@ -1,3 +1,5 @@
+*/1 * * * * ( find /Data/youtube -type f -print0|xargs -0 /usr/bin/rename_pl "s/ |:|,|@|#|&|;|\(|\)|\【|\】|\）|\：|\（|\《|\》|\[|\]|\\\/ /g" )
+*/1 * * * * ( find /Data/transmission/downloaded -type f -print0|xargs -0 /usr/bin/rename_pl "s/ |:|,|@|#|&|;|\(|\)|\【|\】|\）|\：|\（|\《|\》|\[|\]|\\\/ /g" )
 */2 * * * * ( /Data/bypy/daemon.sh /Data/youtube 2>&1 >> /Data/bypy/bypy1.log )
 */2 * * * * ( /Data/bypy/daemon.sh /Data/transmission/downloaded 2>&1 >> /Data/bypy/bypy2.log )
 */2 * * * * ( /Data/transmission/transmission-purge-complete.sh /Data/transmission/downloaded >> /Data/transmission/transmission_complete.log 2>&1 )
@@ -44,8 +46,20 @@
 # download 
 # curl -# -L --socks5-hostname 127.0.0.1:10194 -o "$1" -C - "$2"
 
+# mesos-master ssh port
+# ssh root@223.85.198.100 -p 9022 -i ~/.ssh/ssh_rsa_key
+
+# iftop -t -B -p
+
+# find /home/youtube/ -size -100M -type f -print0 |xargs -0 rm -f
+# find /home/youtube -size +500M -type f -print0 |xargs -0 mv -t /Data/youtube/
+
 # reboot 
+# mount -t ext4 /dev/mapper/Xvdbgroup-xvdb1 /home/
 # vncserver :5000
+
+# iptables -t filter -I INPUT -p tcp --dport 10943 -j REJECT
 # iptables -t nat -I PREROUTING -p tcp -m tcp --dport 443 -j DNAT --to-destination 172.16.251.20:10900 
+
 # ssh -L 11001:kube-master:8080 kube-master -f -g -N -C -o TCPKeepAlive=yes
 # ssh -L 11002:kube-master:443 kube-master -f -g -N -C -o TCPKeepAlive=yes
