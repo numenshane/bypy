@@ -14,7 +14,6 @@ pidFile=/var/bypy/`echo "$1" | sed 's/\//_/g' | sed 's/ //g'`.pid
 if [ ! -e "$pidFile" ]; then  
     echo $$ > "$pidFile"
     cd $dataDir
-    find . -name "*" -exec bash -c '/usr/bin/rename_pl "s/ |:|,|\，|\。|\！|\？|&|#|\?|\*|;|\(|\)|\[|\]|\\\//g" "$1"' -- {} \;
     find . -maxdepth 1 -type f -exec bash -c 'if [ "$1" != "." ]; then /usr/local/bin/python2.7 /Data/bypy/bypy.py upload "$1"; rm -fr "$1"; fi' -- {} \;  
     # ---pending, imp upload local dir to remote dir which is not named by `date +%Y-%m-%d` 
     find . -maxdepth 1 -type d -exec bash -c 'if [ "$1" != "." ]; then /usr/local/bin/python2.7 /Data/bypy/bypy.py upload "$1" `date +%Y-%m-%d` && rm -fr "$1"; fi' -- {} \;  
