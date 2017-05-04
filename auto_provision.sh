@@ -25,7 +25,7 @@ if [ $? -ne 0 ]; then
     mv /usr/bin/python /usr/bin/python_backup
     ln -s /usr/local/bin/python2.7 /usr/bin/python
     sed -i 's/\/usr\/bin\/python$/\/usr\/bin\/python2.6.6/1' /usr/bin/yum
-    
+fi    
     # install easy_install
     echo "++++++ installing easy_install ..."
     tmp_dir="./tmp`date +%y%m%d%H%M%s`"
@@ -37,7 +37,7 @@ if [ $? -ne 0 ]; then
     easy_install-2.7 pip
     # install requests
     easy_install-2.7 requests
-fi
+    pip install bypy
 
 # now auth this python bypy client
 echo "++++++ now auth this python client of bypy...."
