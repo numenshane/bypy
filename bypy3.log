@@ -5023,3 +5023,18 @@ a8cbf632527a14f9a1db50e4fe187712
 0 S root     29544 29516  0  80   0 - 28119 wait   11:04 ?        00:00:00 find . -maxdepth 1 -type f -exec bash -c if [ "$1" != "." ]; then /usr/local/bin/bypy upload "$1"; rm -fr "$1"; fi -- {} ;
 Thu May  4 11:06:01 CST 2017 another bypy instances is running concurrently, just exited!
 --- /Data/bypy/daemon.sh Thu May 4 11:06:01 CST 2017 this round ended
++++ /Data/bypy/daemon.sh Thu May 4 11:08:01 CST 2017 this round started
+0 S root     29516 29508  0  80   0 - 26519 wait   11:04 ?        00:00:00 /bin/bash /Data/bypy/daemon.sh /home/youtube
+0 S root     29544 29516  0  80   0 - 28119 wait   11:04 ?        00:00:00 find . -maxdepth 1 -type f -exec bash -c if [ "$1" != "." ]; then /usr/local/bin/bypy upload "$1"; rm -fr "$1"; fi -- {} ;
+Thu May  4 11:08:01 CST 2017 another bypy instances is running concurrently, just exited!
+--- /Data/bypy/daemon.sh Thu May 4 11:08:01 CST 2017 this round ended
++++ /Data/bypy/daemon.sh Thu May 4 11:10:01 CST 2017 this round started
+0 S root     29516 29508  0  80   0 - 26519 wait   11:04 ?        00:00:00 /bin/bash /Data/bypy/daemon.sh /home/youtube
+0 S root     29544 29516  0  80   0 - 28119 wait   11:04 ?        00:00:00 find . -maxdepth 1 -type f -exec bash -c if [ "$1" != "." ]; then /usr/local/bin/bypy upload "$1"; rm -fr "$1"; fi -- {} ;
+Thu May  4 11:10:01 CST 2017 another bypy instances is running concurrently, just exited!
+--- /Data/bypy/daemon.sh Thu May 4 11:10:01 CST 2017 this round ended
++++ /Data/bypy/daemon.sh Thu May 4 11:12:01 CST 2017 this round started
+0 S root     29516 29508  0  80   0 - 26519 wait   11:04 ?        00:00:00 /bin/bash /Data/bypy/daemon.sh /home/youtube
+0 S root     29544 29516  0  80   0 - 28119 wait   11:04 ?        00:00:00 find . -maxdepth 1 -type f -exec bash -c if [ "$1" != "." ]; then /usr/local/bin/bypy upload "$1"; rm -fr "$1"; fi -- {} ;
+Thu May  4 11:12:02 CST 2017 another bypy instances is running concurrently, just exited!
+--- /Data/bypy/daemon.sh Thu May 4 11:12:02 CST 2017 this round ended
