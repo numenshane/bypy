@@ -24,7 +24,8 @@ if [ $? -ne 0 ]; then
     echo "rm old link, create new, modify yum conf"
     mv /usr/bin/python /usr/bin/python_backup
     ln -s /usr/local/bin/python2.7 /usr/bin/python
-    sed -i 's/\/usr\/bin\/python$/\/usr\/bin\/python2.6.6/1' /usr/bin/yum
+    echo "if yum not works, please modify /usr/bin/yum" 
+    echo "sed -i 's/\/usr\/bin\/python$/\/usr\/bin\/python2.6/1' /usr/bin/yum"
 fi    
     # install easy_install
     echo "++++++ installing easy_install ..."
@@ -41,11 +42,7 @@ fi
 
 # now auth this python bypy client
 echo "++++++ now auth this python client of bypy...."
-if [ ${local_flag} -eq '1' ]; 
-    then /usr/local/bin/python2.7 bypy.py list
-else 
-    python2.7 bypy.py list
-fi
+    bypy list
 
 # adding to crontab like this
 echo "*/2 * * * * ( /Data/bypy/daemon.sh /Data/youtube >> /Data/bypy/bypy.log 2>&1 )"
