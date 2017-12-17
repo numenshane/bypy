@@ -142,22 +142,22 @@ trafficAndConnectionOverview(){
         eth=$nic
     fi
  
-    echo "please wait for 10s to generate network data..."
+    echo "please wait for 15s to generate network data..."
     echo
     #当前流量值
     local traffic_be=(`awk -v eth=$eth -F'[: ]+' '{if ($0 ~eth){print $3,$11}}' /proc/net/dev`)
     #tcpdump监听网络
     tcpdump -v -i $eth -tnn > /tmp/tcpdump_temp 2>&1 &
-    sleep 10
+    sleep 15
     clear
     kill `ps aux | grep tcpdump | grep -v grep | awk '{print $2}'`
 
-    #10s后流量值
+    #15s后流量值
     local traffic_af=(`awk -v eth=$eth -F'[: ]+' '{if ($0 ~eth){print $3,$11}}' /proc/net/dev`)
     #打印15s平均速率
-    local eth_in=$(( (${traffic_af[0]}-${traffic_be[0]})*8/10 ))
-    local eth_out=$(( (${traffic_af[1]}-${traffic_be[1]})*8/10 ))
-    echo -e "\033[32mnetwork device $eth average traffic in 10s: \033[0m"
+    local eth_in=$(( (${traffic_af[0]}-${traffic_be[0]})*8/15 ))
+    local eth_out=$(( (${traffic_af[1]}-${traffic_be[1]})*8/15 ))
+    echo -e "\033[32mnetwork device $eth average traffic in 15s: \033[0m"
     echo "$eth Receive: $(bit_to_human_readable $eth_in)/s"
     echo "$eth Transmit: $(bit_to_human_readable $eth_out)/s"
     echo
@@ -176,16 +176,16 @@ trafficAndConnectionOverview(){
     
     awk '{len=$NF;sub(/\)/,"",len);getline;print $0,len}' /tmp/tcpdump_temp2 > /tmp/tcpdump
 
-    #统计每个端口在10s内的平均流量
-    echo -e "\033[32maverage traffic in 10s base on server port: \033[0m"
-    awk -F'[ .:]+' -v regTcpdump=$regTcpdump '{if ($0 ~ regTcpdump){line="clients > "$8"."$9"."$10"."$11":"$12}else{line=$2"."$3"."$4"."$5":"$6" > clients"};sum[line]+=$NF*8/10}END{for (line in sum){printf "%s %d\n",line,sum[line]}}' /tmp/tcpdump | \
+    #统计每个端口在15s内的平均流量
+    echo -e "\033[32maverage traffic in 15s base on server port: \033[0m"
+    awk -F'[ .:]+' -v regTcpdump=$regTcpdump '{if ($0 ~ regTcpdump){line="clients > "$8"."$9"."$10"."$11":"$12}else{line=$2"."$3"."$4"."$5":"$6" > clients"};sum[line]+=$NF*8/15}END{for (line in sum){printf "%s %d\n",line,sum[line]}}' /tmp/tcpdump | \
     sort -k 4 -nr | head -n 10 | while read a b c d;do
         echo "$a $b $c $(bit_to_human_readable $d)/s"
     done
     echo -ne "\033[11A"
     echo -ne "\033[50C"
-    echo -e "\033[32maverage traffic in 10s base on client port: \033[0m"
-    awk -F'[ .:]+' -v regTcpdump=$regTcpdump '{if ($0 ~ regTcpdump){line=$2"."$3"."$4"."$5":"$6" > server"}else{line="server > "$8"."$9"."$10"."$11":"$12};sum[line]+=$NF*8/10}END{for (line in sum){printf "%s %d\n",line,sum[line]}}' /tmp/tcpdump | \
+    echo -e "\033[32maverage traffic in 15s base on client port: \033[0m"
+    awk -F'[ .:]+' -v regTcpdump=$regTcpdump '{if ($0 ~ regTcpdump){line=$2"."$3"."$4"."$5":"$6" > server"}else{line="server > "$8"."$9"."$10"."$11":"$12};sum[line]+=$NF*8/15}END{for (line in sum){printf "%s %d\n",line,sum[line]}}' /tmp/tcpdump | \
     sort -k 4 -nr | head -n 10 | while read a b c d;do
             echo -ne "\033[50C"
             echo "$a $b $c $(bit_to_human_readable $d)/s"
@@ -193,16 +193,16 @@ trafficAndConnectionOverview(){
         
     echo
 
-    #统计在10s内占用带宽最大的前10个ip
-    echo -e "\033[32mtop 10 ip average traffic in 10s base on server: \033[0m"
-    awk -F'[ .:]+' -v regTcpdump=$regTcpdump '{if ($0 ~ regTcpdump){line=$2"."$3"."$4"."$5" > "$8"."$9"."$10"."$11":"$12}else{line=$2"."$3"."$4"."$5":"$6" > "$8"."$9"."$10"."$11};sum[line]+=$NF*8/10}END{for (line in sum){printf "%s %d\n",line,sum[line]}}' /tmp/tcpdump | \
+    #统计在15s内占用带宽最大的前10个ip
+    echo -e "\033[32mtop 10 ip average traffic in 15s base on server: \033[0m"
+    awk -F'[ .:]+' -v regTcpdump=$regTcpdump '{if ($0 ~ regTcpdump){line=$2"."$3"."$4"."$5" > "$8"."$9"."$10"."$11":"$12}else{line=$2"."$3"."$4"."$5":"$6" > "$8"."$9"."$10"."$11};sum[line]+=$NF*8/15}END{for (line in sum){printf "%s %d\n",line,sum[line]}}' /tmp/tcpdump | \
     sort -k 4 -nr | head -n 10 | while read a b c d;do
         echo "$a $b $c $(bit_to_human_readable $d)/s"
     done
     echo -ne "\033[11A"
     echo -ne "\033[50C"
-    echo -e "\033[32mtop 10 ip average traffic in 10s base on client: \033[0m"
-    awk -F'[ .:]+' -v regTcpdump=$regTcpdump '{if ($0 ~ regTcpdump){line=$2"."$3"."$4"."$5":"$6" > "$8"."$9"."$10"."$11}else{line=$2"."$3"."$4"."$5" > "$8"."$9"."$10"."$11":"$12};sum[line]+=$NF*8/10}END{for (line in sum){printf "%s %d\n",line,sum[line]}}' /tmp/tcpdump | \
+    echo -e "\033[32mtop 10 ip average traffic in 15s base on client: \033[0m"
+    awk -F'[ .:]+' -v regTcpdump=$regTcpdump '{if ($0 ~ regTcpdump){line=$2"."$3"."$4"."$5":"$6" > "$8"."$9"."$10"."$11}else{line=$2"."$3"."$4"."$5" > "$8"."$9"."$10"."$11":"$12};sum[line]+=$NF*8/15}END{for (line in sum){printf "%s %d\n",line,sum[line]}}' /tmp/tcpdump | \
     sort -k 4 -nr | head -n 10 | while read a b c d;do
         echo -ne "\033[50C"
         echo "$a $b $c $(bit_to_human_readable $d)/s"
