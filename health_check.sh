@@ -1,5 +1,5 @@
 #!/bin/bash
-#export PATH="/sbin/:/bin:/usr/sbin/:/usr/bin:/usr/local/bin"
+export PATH="/sbin/:/bin:/usr/sbin/:/usr/bin:/usr/local/bin"
 export TERM=xterm
 flow=`/bin/bash /Data/bypy/network-analysis.sh eth0 |grep 'eth0 Transmit'|awk -F" " '{print $3}'|sed -n 's/Kb\/s//p'|sed -n 's/\.[0-9]*//p'`
 echo $flow
