@@ -1,8 +1,6 @@
 #!/bin/bash
  
-#write by zhumaohai(admin#centos.bz)
 #author blog: www.centos.bz
- 
  
 #显示菜单(单选)
 display_menu(){
@@ -31,19 +29,19 @@ bit_to_human_readable(){
     #input bit value
     local trafficValue=$1
  
-    if [[ ${trafficValue%.*} -gt 922 ]];then
+    #if [[ ${trafficValue%.*} -gt 922 ]];then
         #conv to Kb
         trafficValue=`awk -v value=$trafficValue 'BEGIN{printf "%0.1f",value/1024}'`
-        if [[ ${trafficValue%.*} -gt 922 ]];then
+        #if [[ ${trafficValue%.*} -gt 922 ]];then
             #conv to Mb
-            trafficValue=`awk -v value=$trafficValue 'BEGIN{printf "%0.1f",value/1024}'`
-            echo "${trafficValue}Mb"
-        else
+            #trafficValue=`awk -v value=$trafficValue 'BEGIN{printf "%0.1f",value/1024}'`
+            #echo "${trafficValue}Mb"
+        #else
             echo "${trafficValue}Kb"
-        fi
-    else
-        echo "${trafficValue}b"
-    fi
+        #fi
+    #else
+        #echo "${trafficValue}b"
+    #fi
 }
  
 #判断包管理工具
@@ -132,7 +130,9 @@ trafficAndConnectionOverview(){
     local eth=""
     local nic_arr=(`ifconfig | grep -E -o "^[a-z0-9]+" | grep -v "lo" | uniq`)
     local nicLen=${#nic_arr[@]}
-    if [[ $nicLen -eq 0 ]]; then
+	if [[ $# -eq 1 ]]; then
+		eth=$1
+    elif [[ $nicLen -eq 0 ]]; then
         echo "sorry,I can not detect any network device,please report this issue to author."
         exit 1
     elif [[ $nicLen -eq 1 ]]; then
@@ -154,7 +154,7 @@ trafficAndConnectionOverview(){
 
     #10s后流量值
     local traffic_af=(`awk -v eth=$eth -F'[: ]+' '{if ($0 ~eth){print $3,$11}}' /proc/net/dev`)
-    #打印10s平均速率
+    #打印15s平均速率
     local eth_in=$(( (${traffic_af[0]}-${traffic_be[0]})*8/10 ))
     local eth_out=$(( (${traffic_af[1]}-${traffic_be[1]})*8/10 ))
     echo -e "\033[32mnetwork device $eth average traffic in 10s: \033[0m"
@@ -243,6 +243,11 @@ main(){
         esac
     done   
 }
- 
-main
+
+if [[ $# -eq 1 ]]; then 
+	eth=$1
+	trafficAndConnectionOverview $1
+else
+	main
+fi
 
