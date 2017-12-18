@@ -1,65 +1,39 @@
 */1 * * * * ( find /Data/youtube -type f -print0|xargs -0 /usr/bin/rename_pl "s/ |:|,|@|#|&|;|\(|\)|\【|\】|\）|\：|\（|\《|\》|\[|\]|\\\/ /g" )
+*/1 * * * * ( find /home/youtube -type f -print0|xargs -0 /usr/bin/rename_pl "s/ |:|,|@|#|&|;|\(|\)|\【|\】|\）|\：|\（|\《|\》|\[|\]|\\\/ /g" )
 */1 * * * * ( find /Data/transmission/downloaded -type f -print0|xargs -0 /usr/bin/rename_pl "s/ |:|,|@|#|&|;|\(|\)|\【|\】|\）|\：|\（|\《|\》|\[|\]|\\\/ /g" )
-*/2 * * * * ( /Data/bypy/daemon.sh /Data/youtube 2>&1 >> /Data/bypy/bypy1.log )
-*/2 * * * * ( /Data/bypy/daemon.sh /Data/transmission/downloaded 2>&1 >> /Data/bypy/bypy2.log )
-*/2 * * * * ( /Data/transmission/transmission-purge-complete.sh /Data/transmission/downloaded >> /Data/transmission/transmission_complete.log 2>&1 )
-0 0 * * * ( /Data/transmission/transmission-purge-no-seed.sh >> /Data/transmission/transmission_no_seed.log 2>&1 )
-0 0 1 * * ( cat /dev/null > /Data/transmission/transmission_complete.log )
-0 0 1 * * ( cat /dev/null > /Data/transmission/transmission_no_seed.log ) 
 
-*/2 * * * *  (/root/proxy_exist.sh 2>&1 >> /root/logs)
+#*/1 * * * * ( find /home/youtube/ -size -20M -type f -print0 |xargs -0 rm -f )
 
-#httpd+svnserve  /etc/httpd/conf.modules.d/10-subversion.conf  /var/www/svn/repo/conf /var/www/svn/wd-idc-repo/conf/
-# htdigest /etc/svn-auth.htdigest "Subversion repository" admin
-# install http://www.linuxtechi.com/install-apache-subversion-svn-centos-7/
+*/1 * * * * ( /Data/bypy/daemon.sh /Data/youtube >> /Data/bypy/bypy1.log 2>&1 )
+*/1 * * * * ( /Data/bypy/daemon.sh /home/youtube >> /Data/bypy/bypy3.log 2>&1 )
+*/1 * * * * ( /Data/bypy/daemon.sh /Data/transmission/downloaded >> /Data/bypy/bypy2.log 2>&1 )
+*/5 * * * * ( /Data/bypy/health_check.sh >>/Data/bypy/health_check.log 2>&1 )
 
-#bind9
-# /etc/named/named.conf.local
-# /etc/named/zones/db.
+*/2 * * * * ( /Data/transmission/transmission-purge-complete.sh numenshane:ct19841020 /Data/transmission/downloaded >> /Data/transmission/transmission_complete.log 2>&1 )
+0 0 * * * ( /Data/transmission/transmission-purge-no-seed.sh numenshane:ct19841020 >> /Data/transmission/transmission_no_seed.log 2>&1 )
 
-* * * * * ( /usr/local/bin/haproxy-refresh >> /tmp/haproxy-refresh.log 2>&1 )
-
-*/2 * * * * ( docker rm `docker ps -f status=exited -q` > /dev/null 2>&1 )
-*/2 * * * * ansible cluster -m shell -a 'docker rm $(docker ps -f status=exited -q)' > /dev/null 2>&1
-*/2 * * * * ansible cluster -m shell -a 'docker rm $(docker ps -f status=dead -q)' > /dev/null 2>&1
-
-# docker registry v2 repository dir 
-# docker login  -u admin -p password -e "numenshane@gmail.com" registry.idc-chengdu.wanda.com:5000
-
-# notice param like -node  -bind -client
-# consul cluster init & ui & remote rpc
-# mkdir -p /opt/consul/conf && nohup consul agent -server -ui -data-dir=/opt/consul -node=mesos-master -bind=172.16.251.20 -dc=wd-chengdu -config-dir=/opt/consul/conf -client=172.16.251.20 -log-level=trace -syslog -bootstrap &
-
-# just join, not bootstrap & ui & remote rpc 
-# nohup consul agent -server -data-dir=/opt/consul -node=mesos-master -bind=10.209.192.11 -dc=wd-chendu -config-dir=/opt/consul/conf -client=10.209.192.11 &
-
-# jenkins 
-
-# docker run -d -p 49001:8080 --name=jenkins --restart=always -v /opt/jenkins:/var/jenkins_home -t jenkins
-
-
-# marathon-consul sync k/v 
-# docker run -d  -P ciscocloud/marathon-consul:latest --registry=http://10.209.192.11:8500 --marathon-location=10.209.192.11:8080 --log-level=debug
-
-# docker run -d --restart=on-failure -e "SPLUNK_FORWARD_SERVER=10.77.131.41:9997" -e "DOCKER_HOST=tcp://10.209.192.13:2375" --name dockersplunk mesos-master:5000/docker-splunk-forwarder:0512
-
-# download 
-# curl -# -L --socks5-hostname 127.0.0.1:10194 -o "$1" -C - "$2"
+0 0 */1 * * ( cat /dev/null > /Data/transmission/transmission_complete.log )
+0 0 */1 * * ( cat /dev/null > /Data/transmission/transmission_no_seed.log ) 
+0 0 */1 * * ( cat /dev/null > /Data/bypy/bypy1.log )
+0 0 */1 * * ( cat /dev/null > /Data/bypy/bypy2.log )
+0 0 */1 * * ( cat /dev/null > /Data/bypy/bypy3.log )
 
 # mesos-master ssh port
 # ssh root@223.85.198.100 -p 9022 -i ~/.ssh/ssh_rsa_key
 
+# reboot
+# mount -t ext4 /dev/mapper/Xvdbgroup-xvdb1 /home/
+# iptables -t filter -I INPUT -p tcp --dport 10943 -j REJECT
+
+
 # iftop -t -B -p
+
 
 # find /home/youtube/ -size -100M -type f -print0 |xargs -0 rm -f
 # find /home/youtube -size +500M -type f -print0 |xargs -0 mv -t /Data/youtube/
+# sed -r 's/^.*(http)/\1/' 1.txt >> 1.out
+# for i in `cat 1.out`; do /usr/bin/youtubedownload "$i" && sleep 1m && echo "$i" >> 1.completed; done
 
-# reboot 
-# mount -t ext4 /dev/mapper/Xvdbgroup-xvdb1 /home/
-# vncserver :5000
+# find . -type f -print0|xargs -0 /usr/bin/rename_pl "s/ |:|,|@|#|&|;|\(|\)|\【|\】|\）|\：|\（|\《|\》|\[|\]|\\\//g"
 
-# iptables -t filter -I INPUT -p tcp --dport 10943 -j REJECT
-# iptables -t nat -I PREROUTING -p tcp -m tcp --dport 443 -j DNAT --to-destination 172.16.251.20:10900 
-
-# ssh -L 11001:kube-master:8080 kube-master -f -g -N -C -o TCPKeepAlive=yes
-# ssh -L 11002:kube-master:443 kube-master -f -g -N -C -o TCPKeepAlive=yes
+# ./bypy.py list |grep -e "堂"|sed -e 's/^F //g'|sed -r 's/(.mp4).*$/\1/'|while IFS='\0' read -r line;do ./bypy.py mv "$line" /design/"$line" ; done

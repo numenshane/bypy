@@ -25,7 +25,7 @@ if [ ! -e "$pidFile" ]; then
     echo $$ > "$pidFile"
     cd $dataDir
     find . -maxdepth 1 -type f -exec bash -c 'if [ "$1" != "." ]; then /usr/local/bin/bypy upload "$1"; fi' -- {} \; -exec \
-	bash -c '/usr/local/bin/bypy search $(echo "$1"|sed "s/^\.\///")|grep -vi "Nothing found" >> /dev/null && rm -fr "$1" && echo $(date) safely remove "$1" ' -- {} \;
+	bash -c 'f=$(echo "$1"|sed "s/^\.\///"); /usr/local/bin/bypy search "$f"|grep -vi "Nothing found" >> /dev/null && rm -fr "$1" && echo $(date) safely remove "$1" ' -- {} \;
     # ---pending, imp upload local dir to remote dir which is not named by `date +%Y-%m-%d` 
     find . -maxdepth 1 -type d -exec bash -c 'if [ "$1" != "." ]; then bypy upload "$1" `date +%Y-%m-%d` && rm -fr "$1"; fi' -- {} \;  
     rm "$pidFile"
