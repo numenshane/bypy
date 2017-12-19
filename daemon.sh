@@ -17,7 +17,7 @@ mkdir -p $1
 dataDir=$1 #local sync data path
 pythonExec=/usr/bin/python2.7 # python binary (version > 2.7)
 
-echo "******" `date` $0 $@ this round started
+echo "******++++" `date` $0 $@ this round started
 
 mkdir -p /var/bypy
 pidFile=/var/bypy/`echo "$1" | sed 's/\//_/g' | sed 's/ //g'`.pid
@@ -39,4 +39,4 @@ else
     fi
 fi
 
-echo "******" `date` $0 $@ this round ended
+echo "******----" `date` $0 $@ this round ended
