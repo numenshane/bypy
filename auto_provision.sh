@@ -7,10 +7,11 @@ whereis python |grep python2.7
 if [ $? -ne 0 ]; then 
     ${local_flag}=1
     echo "++++++ yum install ++++++ "
+    yum -y install epel-release
     yum groupinstall -y 'development tools'
     yum install -y zlib-devel bzip2-devel openssl-devel xz-libs wget
     yum install xz -y
-
+    yum -y install python-pip
     echo "++++++ installing python2.7 from src ++++++"
     src_dir="./tmp`date +%y%m%d%H%M%s`"
     mkdir -p ${src_dir} && cd ${src_dir}
