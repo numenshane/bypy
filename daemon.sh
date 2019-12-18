@@ -15,7 +15,7 @@ function safely_clean {
 
 mkdir -p $1
 dataDir=$1 #local sync data path
-pythonExec=/usr/bin/python2.7 # python binary (version > 2.7)
+#pythonExec=/usr/bin/python2.7 # python binary (version > 2.7)
 
 echo "******++++" `date` $0 $@ this round started
 
