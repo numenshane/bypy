@@ -29,16 +29,20 @@ if [ $? -ne 0 ]; then
     echo "sed -i 's/\/usr\/bin\/python$/\/usr\/bin\/python2.6/1' /usr/bin/yum"
 fi    
     # install easy_install
-    echo "++++++ installing easy_install ..."
-    tmp_dir="./tmp`date +%y%m%d%H%M%s`"
-    mkdir -p ${tmp_dir} && cd ${tmp_dir}
-    wget https://bootstrap.pypa.io/ez_setup.py
-    python2.7 ez_setup.py
-    cd .. && rm -fr ${tmp_dir}
+    #echo "++++++ installing easy_install ..."
+    #tmp_dir="./tmp`date +%y%m%d%H%M%s`"
+    #mkdir -p ${tmp_dir} && cd ${tmp_dir}
+    #wget https://bootstrap.pypa.io/ez_setup.py
+    #python2.7 ez_setup.py
+    #cd .. && rm -fr ${tmp_dir}
 
-    easy_install-2.7 pip
+    #easy_install-2.7 pip
     # install requests
-    easy_install-2.7 requests
+    #easy_install-2.7 requests
+    
+    # for lastest aws ami, python > 2.7.9, just run
+    # yum install epel-release 
+    yum install python-pip
     pip install bypy
 
 # now auth this python bypy client
